@@ -533,7 +533,8 @@
       60%       { transform: translateX(-6px) scale(1); }
       80%       { transform: translateX(6px) scale(1); }
     }
-    .cheat-monkey {
+    .cheat-monkey,
+    .cheat-photo {
       width: 160px;
       height: 160px;
       object-fit: cover;
@@ -542,7 +543,13 @@
       box-shadow: 0 0 24px rgba(192,57,43,0.5);
       margin: 0 auto 16px;
       display: block;
+      transition: opacity 0.25s ease, border-color 0.25s, box-shadow 0.25s;
     }
+    .cheat-photo.is-kimi {
+      border-color: var(--gold);
+      box-shadow: 0 0 24px rgba(245,200,66,0.45);
+    }
+    .cheat-photo.is-fading { opacity: 0; }
     .cheat-modal-box h3 {
       font-family: 'Cinzel Decorative', cursive;
       color: var(--red);
@@ -633,7 +640,7 @@
 <!-- Modal trampa del monito -->
 <div class="cheat-modal" id="cheatModal" aria-hidden="true">
   <div class="cheat-modal-box" id="cheatModalBox">
-    <img src="fotos/monito-trampa.png" alt="Monito que te vio" class="cheat-monkey" />
+    <img src="fotos/monito-trampa.png" alt="" class="cheat-photo" id="cheatPhoto" />
     <h3 id="cheatTitle">¡Te vi! 👀</h3>
     <p id="cheatMessage">No hagas trampa, Sei Ji.</p>
     <p class="cheat-sub" id="cheatSub">Edmi recibió la alerta. Mentira, pero podría.</p>
@@ -821,7 +828,7 @@
         <path d="M100 162 C100 162 94 156 94 153 A3 3 0 0 1 100 152 A3 3 0 0 1 106 153 C106 156 100 162 100 162Z" fill="#e88ba0"/>
       </svg>
     </div>
-    <p>Nuestra tripulación oficial — nuestra gata persa, con sombrero de paja prestado 🐱⚓</p>
+    <p>Nuestra tripulación oficial — Kimi, con sombrero de paja prestado 🐱⚓</p>
   </div>
 
   <div class="divider"></div>
@@ -866,7 +873,7 @@
     <ul class="treasure-list">
       <li><span class="icon">🎉</span> Que este cumpleaños sea tan especial como tú lo mereces.</li>
       <li><span class="icon">😂</span> Que sigas riendo y haciéndome reír como nadie más.</li>
-      <li><span class="icon">🐱</span> Que nuestra gata persa te siga eligiendo para las siestas.</li>
+      <li><span class="icon">🐱</span> Que Kimi te siga eligiendo para las siestas.</li>
       <li><span class="icon">⚓</span> Que los 30 te encuentren navegando hacia todo lo bueno.</li>
       <li><span class="icon">💪</span> Que descubras aún más la fuerza que ya llevas dentro.</li>
       <li><span class="icon">📺</span> Que One Piece nos siga dando noches perfectas juntos.</li>
@@ -934,41 +941,81 @@
   // ---- CHEAT BUTTON (trampa del monito) ----
   const CHEAT_MESSAGES = [
     {
+      img: 'fotos/monito-trampa.png',
+      alt: 'Monito que te vio',
+      kimi: false,
       title: '¡Te vi! 👀',
       msg: 'No hagas trampa, Sei Ji. Edmi se esforzó en esto.',
-      sub: 'El monito no perdona. La gata persa tampoco.'
+      sub: 'El monito no perdona. Kimi tampoco.'
     },
     {
+      img: 'fotos/kimi-juzgando.png',
+      alt: 'Kimi te está juzgando',
+      kimi: true,
+      title: 'Kimi te vio 🐱',
+      msg: 'Esas caras no mienten. Kimi sabe que hiciste clic.',
+      sub: 'Hasta Kimi dice que esperes tu cumpleaños.'
+    },
+    {
+      img: 'fotos/monito-trampa.png',
+      alt: 'Monito que te vio',
+      kimi: false,
       title: 'Error 403: Impaciencia',
       msg: 'Acceso denegado. Vuelve a las 00:00 como buen cumpleañero.',
       sub: 'Nice try, pero Edmi pensó en esto primero.'
     },
     {
+      img: 'fotos/kimi-dormida.png',
+      alt: 'Kimi durmiendo',
+      kimi: true,
+      title: 'Kimi despertó 😴',
+      msg: 'Estaba durmiendo y aun así te pilló haciendo trampa.',
+      sub: 'Si Kimi pudo despertar por esto, tú puedes esperar.'
+    },
+    {
+      img: 'fotos/monito-trampa.png',
+      alt: 'Monito que te vio',
+      kimi: false,
       title: '¿En serio? 😤',
       msg: 'Luffy esperó años por el One Piece. Tú puedes esperar unas horas.',
       sub: 'Prioridades, capitán.'
     },
     {
+      img: 'fotos/kimi-botella.png',
+      alt: 'Kimi vigilando',
+      kimi: true,
+      title: 'Kimi estaba ahí 🍾',
+      msg: 'No te diste cuenta, pero Kimi estuvo observando todo el tiempo.',
+      sub: 'Ni la botella la distrajo. Rendite.'
+    },
+    {
+      img: 'fotos/monito-trampa.png',
+      alt: 'Monito que te vio',
+      kimi: false,
       title: 'Trampa detectada 🐒',
       msg: 'Este botón era cebo. Caíste. Te reporto con Edmi.',
       sub: 'Mentira... o tal vez no 👀'
     },
     {
+      img: 'fotos/kimi-juzgando.png',
+      alt: 'Kimi juzgando',
+      kimi: true,
+      title: 'Edmi 1 — Sei Ji 0',
+      msg: 'Pensaste que podías saltarte la cuenta regresiva. Qué tierno.',
+      sub: 'Kimi de juez. Veredicto: espera.'
+    },
+    {
+      img: 'fotos/kimi-dormida.png',
+      alt: 'Kimi durmiendo',
+      kimi: true,
       title: 'Nope. 🚫',
       msg: 'La paciencia también es un regalo de cumpleaños.',
       sub: 'Spoiler: el mensaje vale la pena. Espera.'
     },
     {
-      title: 'Edmi 1 — Sei Ji 0',
-      msg: 'Pensaste que podías saltarte la cuenta regresiva. Qué tierno.',
-      sub: 'Programado con amor y con trampas incluidas.'
-    },
-    {
-      title: 'La gata te vio 🐱',
-      msg: 'Hasta la gata persa dice que esperes tu cumpleaños.',
-      sub: 'Ella tiene más paciencia que tú. Aprende.'
-    },
-    {
+      img: 'fotos/monito-trampa.png',
+      alt: 'Monito que te vio',
+      kimi: false,
       title: 'Console.log("Atrapado")',
       msg: 'Edmi dejó este botón solo para ver si hacías clic. Y lo hiciste.',
       sub: 'Bug reportado. Solución: esperar.'
@@ -979,8 +1026,17 @@
   document.getElementById('cheatBtn').addEventListener('click', () => {
     const modal = document.getElementById('cheatModal');
     const box = document.getElementById('cheatModalBox');
+    const photo = document.getElementById('cheatPhoto');
     const data = CHEAT_MESSAGES[cheatClickCount % CHEAT_MESSAGES.length];
     cheatClickCount++;
+
+    photo.classList.add('is-fading');
+    setTimeout(() => {
+      photo.src = data.img;
+      photo.alt = data.alt;
+      photo.classList.toggle('is-kimi', data.kimi);
+      photo.classList.remove('is-fading');
+    }, 150);
 
     document.getElementById('cheatTitle').textContent = data.title;
     document.getElementById('cheatMessage').textContent = data.msg;
