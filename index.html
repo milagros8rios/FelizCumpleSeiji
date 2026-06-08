@@ -470,23 +470,55 @@
       font-size: 0.82rem;
       font-style: italic;
     }
+    .cheat-btn-wrap {
+      margin-top: 32px;
+      position: relative;
+      display: inline-block;
+    }
+    .cheat-btn-wrap::before {
+      content: '¿Impaciente? 👀';
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      white-space: nowrap;
+      animation: pulse 2s ease-in-out infinite;
+    }
     .cheat-btn {
-      margin-top: 28px;
-      background: transparent;
-      border: 1px dashed rgba(245,200,66,0.35);
-      color: rgba(232,223,200,0.55);
-      font-family: 'Lora', serif;
-      font-size: 0.82rem;
-      font-style: italic;
-      padding: 10px 18px;
+      background: linear-gradient(135deg, #f5c842 0%, #e8a020 50%, #f5c842 100%);
+      background-size: 200% 200%;
+      border: none;
+      color: #0a1628;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      font-weight: 700;
+      font-style: normal;
+      padding: 14px 28px;
       border-radius: 40px;
       cursor: pointer;
-      transition: color 0.2s, border-color 0.2s, transform 0.2s;
+      box-shadow: 0 0 24px rgba(245,200,66,0.55), 0 4px 16px rgba(0,0,0,0.3);
+      animation: cheat-btn-glow 2.5s ease-in-out infinite, cheat-btn-shine 3s linear infinite;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+    @keyframes cheat-btn-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(245,200,66,0.45), 0 4px 16px rgba(0,0,0,0.3); }
+      50%       { box-shadow: 0 0 40px rgba(245,200,66,0.85), 0 4px 24px rgba(245,200,66,0.35); }
+    }
+    @keyframes cheat-btn-shine {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     .cheat-btn:hover {
-      color: var(--gold-light);
-      border-color: rgba(245,200,66,0.7);
-      transform: scale(1.03);
+      transform: scale(1.06);
+      box-shadow: 0 0 50px rgba(245,200,66,0.95), 0 6px 28px rgba(245,200,66,0.4);
+    }
+    .cheat-btn:active {
+      transform: scale(0.98);
     }
 
     /* ---- CHEAT CAUGHT MODAL ---- */
@@ -634,7 +666,9 @@
   </div>
   <p class="countdown-date">9 de junio de 2026 · 00:00</p>
   <p class="countdown-hint">El mensaje se revelará cuando sea tu cumpleaños 🎂</p>
-  <button type="button" class="cheat-btn" id="cheatBtn">Ignorar a Edmi, ver mensaje ahora</button>
+  <div class="cheat-btn-wrap">
+    <button type="button" class="cheat-btn" id="cheatBtn">⚡ Ignorar a Edmi, ver mensaje ahora →</button>
+  </div>
 </div>
 
 <!-- Modal trampa del monito -->
