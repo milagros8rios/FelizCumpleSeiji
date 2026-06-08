@@ -470,6 +470,112 @@
       font-size: 0.82rem;
       font-style: italic;
     }
+    .cheat-btn {
+      margin-top: 28px;
+      background: transparent;
+      border: 1px dashed rgba(245,200,66,0.35);
+      color: rgba(232,223,200,0.55);
+      font-family: 'Lora', serif;
+      font-size: 0.82rem;
+      font-style: italic;
+      padding: 10px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .cheat-btn:hover {
+      color: var(--gold-light);
+      border-color: rgba(245,200,66,0.7);
+      transform: scale(1.03);
+    }
+
+    /* ---- CHEAT CAUGHT MODAL ---- */
+    .cheat-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(2,11,24,0.88);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s, visibility 0.35s;
+    }
+    .cheat-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .cheat-modal-box {
+      background: rgba(4,30,58,0.95);
+      border: 2px solid var(--red);
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(192,57,43,0.35);
+      transform: scale(0.85);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cheat-modal.is-open .cheat-modal-box {
+      transform: scale(1);
+    }
+    .cheat-modal-box.shake {
+      animation: cheat-shake 0.5s ease;
+    }
+    @keyframes cheat-shake {
+      0%, 100% { transform: translateX(0) scale(1); }
+      20%       { transform: translateX(-10px) scale(1); }
+      40%       { transform: translateX(10px) scale(1); }
+      60%       { transform: translateX(-6px) scale(1); }
+      80%       { transform: translateX(6px) scale(1); }
+    }
+    .cheat-monkey {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--red);
+      box-shadow: 0 0 24px rgba(192,57,43,0.5);
+      margin: 0 auto 16px;
+      display: block;
+    }
+    .cheat-modal-box h3 {
+      font-family: 'Cinzel Decorative', cursive;
+      color: var(--red);
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+    }
+    .cheat-modal-box p {
+      color: #e8dfc8;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .cheat-modal-box .cheat-sub {
+      color: #8ab4d8;
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .cheat-close-btn {
+      background: var(--gold);
+      color: #0a1628;
+      border: none;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.85rem;
+      padding: 10px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cheat-close-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(245,200,66,0.4);
+    }
 
     @media (max-width: 520px) {
       .card { padding: 28px 22px; }
@@ -521,6 +627,18 @@
   </div>
   <p class="countdown-date">9 de junio de 2026 · 00:00</p>
   <p class="countdown-hint">El mensaje se revelará cuando sea tu cumpleaños 🎂</p>
+  <button type="button" class="cheat-btn" id="cheatBtn">Ignorar a Edmi, ver mensaje ahora</button>
+</div>
+
+<!-- Modal trampa del monito -->
+<div class="cheat-modal" id="cheatModal" aria-hidden="true">
+  <div class="cheat-modal-box" id="cheatModalBox">
+    <img src="fotos/monito-trampa.png" alt="Monito que te vio" class="cheat-monkey" />
+    <h3 id="cheatTitle">¡Te vi! 👀</h3>
+    <p id="cheatMessage">No hagas trampa, Sei Ji.</p>
+    <p class="cheat-sub" id="cheatSub">Edmi recibió la alerta. Mentira, pero podría.</p>
+    <button type="button" class="cheat-close-btn" id="cheatCloseBtn">Ok, espero como persona civilizada</button>
+  </div>
 </div>
 
 <!-- Click hint -->
@@ -812,6 +930,79 @@
       if (!updateCountdown()) clearInterval(countdownInterval);
     }, 1000);
   }
+
+  // ---- CHEAT BUTTON (trampa del monito) ----
+  const CHEAT_MESSAGES = [
+    {
+      title: '¡Te vi! 👀',
+      msg: 'No hagas trampa, Sei Ji. Edmi se esforzó en esto.',
+      sub: 'El monito no perdona. La gata persa tampoco.'
+    },
+    {
+      title: 'Error 403: Impaciencia',
+      msg: 'Acceso denegado. Vuelve a las 00:00 como buen cumpleañero.',
+      sub: 'Nice try, pero Edmi pensó en esto primero.'
+    },
+    {
+      title: '¿En serio? 😤',
+      msg: 'Luffy esperó años por el One Piece. Tú puedes esperar unas horas.',
+      sub: 'Prioridades, capitán.'
+    },
+    {
+      title: 'Trampa detectada 🐒',
+      msg: 'Este botón era cebo. Caíste. Te reporto con Edmi.',
+      sub: 'Mentira... o tal vez no 👀'
+    },
+    {
+      title: 'Nope. 🚫',
+      msg: 'La paciencia también es un regalo de cumpleaños.',
+      sub: 'Spoiler: el mensaje vale la pena. Espera.'
+    },
+    {
+      title: 'Edmi 1 — Sei Ji 0',
+      msg: 'Pensaste que podías saltarte la cuenta regresiva. Qué tierno.',
+      sub: 'Programado con amor y con trampas incluidas.'
+    },
+    {
+      title: 'La gata te vio 🐱',
+      msg: 'Hasta la gata persa dice que esperes tu cumpleaños.',
+      sub: 'Ella tiene más paciencia que tú. Aprende.'
+    },
+    {
+      title: 'Console.log("Atrapado")',
+      msg: 'Edmi dejó este botón solo para ver si hacías clic. Y lo hiciste.',
+      sub: 'Bug reportado. Solución: esperar.'
+    }
+  ];
+  let cheatClickCount = 0;
+
+  document.getElementById('cheatBtn').addEventListener('click', () => {
+    const modal = document.getElementById('cheatModal');
+    const box = document.getElementById('cheatModalBox');
+    const data = CHEAT_MESSAGES[cheatClickCount % CHEAT_MESSAGES.length];
+    cheatClickCount++;
+
+    document.getElementById('cheatTitle').textContent = data.title;
+    document.getElementById('cheatMessage').textContent = data.msg;
+    document.getElementById('cheatSub').textContent = data.sub;
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+  });
+
+  function closeCheatModal() {
+    const modal = document.getElementById('cheatModal');
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.getElementById('cheatCloseBtn').addEventListener('click', closeCheatModal);
+  document.getElementById('cheatModal').addEventListener('click', (e) => {
+    if (e.target.id === 'cheatModal') closeCheatModal();
+  });
 
   // ---- STARS ----
   (function generateStars() {
